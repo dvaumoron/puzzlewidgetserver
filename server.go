@@ -44,6 +44,13 @@ type action struct {
 
 type Widget map[string]action
 
+// based on gin path convention, with the path "/view/:id/:name"
+// the map passed to handler will contains "pathData/id" and "pathData/name" entries
+// handler returned values are supposed to be redirect, templateName and data :
+// - redirect is a redirect path (ignored if empty), to build an absolute one on the site the map contains the "CurrentUrl" entry
+// - data could be :
+//   - a json marshalled map which entries will be added to the data passed to the template engine with templateName
+//   - or any raw data when the action kind is pb.MethodKind_RAW
 func (w Widget) AddAction(actionName string, kind pb.MethodKind, path string, handler ActionHandler) {
 	w[actionName] = action{kind: kind, path: path, handler: handler}
 }
