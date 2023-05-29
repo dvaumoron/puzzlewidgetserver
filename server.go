@@ -34,7 +34,7 @@ var errActionNotFound = errors.New("action not found")
 var errInternal = errors.New("internal service error")
 
 type Data = map[string]any
-type ActionHandler = func(Data) (string, string, []byte, error)
+type ActionHandler = func(context.Context, Data) (string, string, []byte, error)
 
 type action struct {
 	kind    pb.MethodKind
@@ -86,7 +86,7 @@ func (s widgetServerAdapter) Process(ctx context.Context, request *pb.ProcessReq
 		return nil, errInternal
 	}
 
-	redirect, templateName, resData, err := action.handler(data)
+	redirect, templateName, resData, err := action.handler(ctx, data)
 	if err != nil {
 		s.logger.ErrorContext(ctx, "Failed to handle action", zap.Error(err))
 		return nil, errInternal
