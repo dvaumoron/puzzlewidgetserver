@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/dvaumoron/puzzlegrpcserver v1.4.0
-	github.com/dvaumoron/puzzlewidgetservice v1.0.2
+	github.com/dvaumoron/puzzlewidgetservice v1.1.0
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.0
 	go.uber.org/zap v1.24.0
 	google.golang.org/grpc v1.55.0

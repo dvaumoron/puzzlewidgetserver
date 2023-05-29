@@ -29,6 +29,9 @@ import (
 	"google.golang.org/grpc"
 )
 
+const dataKey = "data.json"
+const filesKey = "Files"
+
 var errWidgetNotFound = errors.New("widget not found")
 var errActionNotFound = errors.New("action not found")
 var errInternal = errors.New("internal service error")
@@ -84,10 +87,20 @@ func (s widgetServerAdapter) Process(ctx context.Context, request *pb.ProcessReq
 		return nil, errActionNotFound
 	}
 
+	files := request.Files
+	dataBytes := files[dataKey]
+
 	var data Data
-	if err := json.Unmarshal(request.Data, &data); err != nil {
-		s.logger.ErrorContext(ctx, "Failed to unmarshal json from call", zap.Error(err))
+	if err := json.Unmarshal(dataBytes, &data); err != nil {
+		s.logger.ErrorContext(ctx, "Failed to unmarshal data.json from call", zap.Error(err))
 		return nil, errInternal
+	}
+	// cleaning for GC
+	dataBytes = nil
+	delete(files, dataKey)
+
+	if len(files) != 0 {
+		data["Files"] = files
 	}
 
 	redirect, templateName, resData, err := action.handler(ctx, data)
