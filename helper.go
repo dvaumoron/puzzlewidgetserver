@@ -23,6 +23,7 @@ import (
 )
 
 var errNotInt = errors.New("value is not an int")
+var errNotFloat = errors.New("value is not an float")
 var errNotMap = errors.New("value is not a map")
 var errFilesType = errors.New("field Files is not of the expected type")
 var errNotSlice = errors.New("value is not a slice")
@@ -98,6 +99,45 @@ func AsUint64(value any) (uint64, error) {
 		return i, nil
 	}
 	return 0, errNotInt
+}
+
+func AsFloat64(value any) (float64, error) {
+	if value == nil {
+		return 0, nil
+	}
+	switch casted := value.(type) {
+	case uint:
+		return float64(casted), nil
+	case uint8:
+		return float64(casted), nil
+	case uint16:
+		return float64(casted), nil
+	case uint32:
+		return float64(casted), nil
+	case uint64:
+		return float64(casted), nil
+	case int:
+		return float64(casted), nil
+	case int8:
+		return float64(casted), nil
+	case int16:
+		return float64(casted), nil
+	case int32:
+		return float64(casted), nil
+	case int64:
+		return float64(casted), nil
+	case float32:
+		return float64(casted), nil
+	case float64:
+		return casted, nil
+	case string:
+		f, err := strconv.ParseFloat(casted, 64)
+		if err != nil {
+			return 0, err
+		}
+		return f, nil
+	}
+	return 0, errNotFloat
 }
 
 func GetFiles(data Data) (map[string][]byte, error) {
