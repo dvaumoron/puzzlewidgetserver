@@ -108,6 +108,10 @@ func Make(serviceName string, version string, opts ...grpc.ServerOption) WidgetS
 	return WidgetServer{inner: grpcServer, widgets: map[string]Widget{}}
 }
 
+func (s WidgetServer) Logger() *otelzap.Logger {
+	return s.inner.Logger
+}
+
 func (s WidgetServer) CreateWidget(widgetName string) Widget {
 	widget, ok := s.widgets[widgetName]
 	if !ok {
