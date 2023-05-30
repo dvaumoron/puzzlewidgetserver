@@ -102,7 +102,7 @@ func (s widgetServerAdapter) Process(ctx context.Context, request *pb.ProcessReq
 	delete(files, dataKey)
 
 	if len(files) != 0 {
-		data["Files"] = files
+		data[filesKey] = files
 	}
 
 	redirect, templateName, resData, err := action.handler(ctx, data)
