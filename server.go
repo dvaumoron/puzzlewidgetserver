@@ -31,6 +31,7 @@ import (
 
 const dataKey = "data.json"
 const filesKey = "Files"
+const urlKey = "CurrentUrl"
 
 var errWidgetNotFound = errors.New("widget not found")
 var errActionNotFound = errors.New("action not found")

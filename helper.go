@@ -25,9 +25,10 @@ import (
 var errNotInt = errors.New("value is not an int")
 var errNotFloat = errors.New("value is not an float")
 var errNotMap = errors.New("value is not a map")
-var errFilesType = errors.New("field Files is not of the expected type")
 var errNotSlice = errors.New("value is not a slice")
 var errNotString = errors.New("value is not a string")
+var errFilesType = errors.New("field Files is not of the expected type")
+var errEmptyUrl = errors.New("field CurrentUrl is empty")
 
 func AsMap(value any) (Data, error) {
 	if value == nil {
@@ -150,4 +151,23 @@ func GetFiles(data Data) (map[string][]byte, error) {
 		return nil, errFilesType
 	}
 	return m, nil
+}
+
+func GetBaseUrl(levelToErase uint8, data Data) (string, error) {
+	res, err := AsString(data[urlKey])
+	if err != nil {
+		return "", err
+	}
+
+	i := len(res) - 1
+	if i == -1 {
+		return "", errEmptyUrl
+	}
+	for count := uint8(0); count < levelToErase; {
+		i--
+		if res[i] == '/' {
+			count++
+		}
+	}
+	return res[:i+1], nil
 }
