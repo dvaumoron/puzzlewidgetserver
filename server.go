@@ -42,9 +42,10 @@ type Data = map[string]any
 type ActionHandler = func(context.Context, Data) (string, string, []byte, error)
 
 type action struct {
-	kind    pb.MethodKind
-	path    string
-	handler ActionHandler
+	kind       pb.MethodKind
+	path       string
+	queryNames []string
+	handler    ActionHandler
 }
 
 type Widget map[string]action
@@ -62,6 +63,11 @@ type Widget map[string]action
 //     - or any raw data when the action kind is pb.MethodKind_RAW
 func (w Widget) AddAction(actionName string, kind pb.MethodKind, path string, handler ActionHandler) {
 	w[actionName] = action{kind: kind, path: path, handler: handler}
+}
+
+// Like AddAction but allow to indicate which query parameters should be transmitted.
+func (w Widget) AddActionWithQuery(actionName string, kind pb.MethodKind, path string, queryNames []string, handler ActionHandler) {
+	w[actionName] = action{kind: kind, path: path, queryNames: queryNames, handler: handler}
 }
 
 type widgetServerAdapter struct {
@@ -144,7 +150,7 @@ func (s WidgetServer) Start() {
 func convertActions(widget Widget) []*pb.Action {
 	actions := make([]*pb.Action, 0, len(widget))
 	for key, value := range widget {
-		actions = append(actions, &pb.Action{Kind: value.kind, Name: key, Path: value.path})
+		actions = append(actions, &pb.Action{Kind: value.kind, Name: key, Path: value.path, QueryNames: value.queryNames})
 	}
 	return actions
 }
