@@ -29,6 +29,7 @@ var errNotSlice = errors.New("value is not a slice")
 var errNotString = errors.New("value is not a string")
 var errFilesType = errors.New("field Files is not of the expected type")
 var errEmptyUrl = errors.New("field CurrentUrl is empty")
+var errNoUser = errors.New("field Id is 0")
 
 func AsMap(value any) (Data, error) {
 	if value == nil {
@@ -170,4 +171,15 @@ func GetBaseUrl(levelToErase uint8, data Data) (string, error) {
 		}
 	}
 	return res[:i+1], nil
+}
+
+func GetCurrentUserId(data Data) (uint64, error) {
+	res, err := AsUint64(data[userKey])
+	if err != nil {
+		return 0, err
+	}
+	if res == 0 {
+		return 0, errNoUser
+	}
+	return res, nil
 }

@@ -32,6 +32,7 @@ import (
 const dataKey = "puzzledata.json"
 const filesKey = "Files"
 const urlKey = "CurrentUrl"
+const userKey = "Id"
 
 var errWidgetNotFound = errors.New("widget not found")
 var errActionNotFound = errors.New("action not found")
