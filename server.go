@@ -29,7 +29,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-const dataKey = "data.json"
+const dataKey = "puzzledata.json"
 const filesKey = "Files"
 const urlKey = "CurrentUrl"
 
