@@ -183,3 +183,31 @@ func GetCurrentUserId(data Data) (uint64, error) {
 	}
 	return res, nil
 }
+
+func GetPagination(data Data) (uint64, uint64, uint64, string) {
+	pageNumber, _ := AsUint64(data["pageNumber"])
+	if pageNumber == 0 {
+		pageNumber = 1
+	}
+	pageSize, _ := AsUint64(data["pageSize"])
+	if pageSize == 0 {
+		pageSize, _ = AsUint64(data["defaultPageSize"])
+	}
+	filter, _ := AsString(data["filter"])
+
+	start := (pageNumber - 1) * pageSize
+	end := start + pageSize
+
+	return pageNumber, start, end, filter
+}
+
+func InitPagination(data Data, filter string, pageNumber uint64, end uint64, total uint64) {
+	data["Filter"] = filter
+	if pageNumber != 1 {
+		data["PreviousPageNumber"] = pageNumber - 1
+	}
+	if end < total {
+		data["NextPageNumber"] = pageNumber + 1
+	}
+	data["Total"] = total
+}
