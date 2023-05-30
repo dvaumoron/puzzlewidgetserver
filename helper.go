@@ -141,6 +141,9 @@ func AsFloat64(value any) (float64, error) {
 	}
 	return 0, errNotFloat
 }
+func GetFormData(data Data) (Data, error) {
+	return AsMap(data[formKey])
+}
 
 func GetFiles(data Data) (map[string][]byte, error) {
 	value := data[filesKey]
